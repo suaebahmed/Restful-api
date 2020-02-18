@@ -6,6 +6,7 @@ router.post('/',(req,res)=>{
         name: req.body.name,
         price: req.body.price
     });
+//console.log(newProduct)
 newProduct.save()
         .then((data)=>{
         return res.status(200).json({
@@ -17,7 +18,7 @@ newProduct.save()
         })
         })
         .catch(err=>{
-            return status(500).json({
+            return res.status(500).json({
                 msg: 'catch an err',
                 Error: err
             })
@@ -37,7 +38,7 @@ router.get('/',(req,res)=>{
                     price: data.price,
                     request: {
                         type: 'GET',
-                        url: 'https://localhost:3000/products/'+data._id
+                        url: 'http://localhost:3000/products/'+data._id
                     }
                 }
             });
@@ -55,29 +56,32 @@ router.get('/',(req,res)=>{
         })
 });
 
-router.get('/:id',(req,res)=>{
-var id= req.params.id;
-Product.findOne({_id: id})
+router.get('/:productId',(req,res)=>{
+var id= req.params.productId;
+Product.findById(id)
+        .exec()
         .then(data=>{
-            return res.status(200).json({
+        // console.log('form data: '+data)
+        return res.status(200).json({
                 msg: 'successfully you got result',
+                _id: data._id,
                 name: data.name,
                 price: data.price,
-                _id: data._id,
                 request: {
                     type: 'GET',
-                    url: 'https://localhost:3000/products/'+_id
+                    //url: 'http://localhost:3000/products/'+_id   --//wrong
+                    url: 'http://localhost:3000/products/'+data._id
                 }
             })
         })
         .catch(err=>{
-            return status(500).json({
+               res.status(500).json({
                 msg: 'catch an err',
                 Error: err
             })    
         });
 })
-router.get('/:id',(req,res)=>{
+router.delete('/:id',(req,res)=>{
     var id= req.params.id;
     Product.remove({_id: id})
             .then(()=>{
@@ -85,18 +89,18 @@ router.get('/:id',(req,res)=>{
                     msg: 'this product is deleted',
                     request: {
                         type: 'GET',
-                        url: 'https://localhost:3000/products/'+_id
+                        url: 'http://localhost:3000/products/'
                     }
                 })
             })
             .catch(err=>{
-                return status(500).json({
+                return res.status(500).json({
                     msg: 'catch an err',
                     Error: err
                 })    
             });
     });
-router.post('/:id',(req,res)=>{
+router.patch('/:id',(req,res)=>{
     var id= req.params.id;
     const updateP = {
         name: req.body.name,
@@ -110,14 +114,16 @@ router.post('/:id',(req,res)=>{
                     price: updateP.price,
                     request: {
                         type: 'GET',
-                        url: 'https://localhost:3000/products/'+_id
+                        url: 'http://localhost:3000/products/'
                     }
                 })
             })
             .catch(err=>{
-                return status(500).json({
+                return res.status(500).json({
                     msg: 'catch an err',
                     Error: err
                 })    
             });
     })
+
+module.exports = router;
