@@ -1,12 +1,32 @@
 const router = require('express').Router();
-const Product = require('../models/Products')
+const Product = require('../models/Products');
+const multer = require('multer');
+const checkAuth = require('../middleware/check-auth');
 
-router.post('/',(req,res)=>{
+const storage = multer.diskStorage({
+    destination: function(req,file,cb){
+        cb(null,'./uploads')
+    },
+    filename: function(req,file,cb){
+        cb(null,new Date().toISOString()+file.originalname);
+    }
+})
+const upload = multer({
+    storage: storage,
+    // fileFilter:
+    limits: {
+        fileSize: 1024 * 1020 * 8
+    }
+})
+
+router.post('/',upload.single("myPic"),checkAuth,(req,res)=>{
     const newProduct = new Product({
         name: req.body.name,
         price: req.body.price
     });
 //console.log(newProduct)
+// console.log("++++++++++++++ in chechAuth +++++++++++++++")
+// console.log(req.userData)
 newProduct.save()
         .then((data)=>{
         return res.status(200).json({

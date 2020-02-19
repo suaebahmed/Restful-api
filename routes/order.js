@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const Order = require('../models/order');
+const checkAuth = require('../middleware/check-auth');
 
 
-router.get('/',(req,res)=>{
+router.get('/',checkAuth,(req,res)=>{
     Order.find()
         .select('name price _id')
         .limit(10)
@@ -33,7 +34,7 @@ router.get('/',(req,res)=>{
         })
 });
 
-router.post('/',(req,res)=>{
+router.post('/',checkAuth,(req,res)=>{
     const newOrder = new Order();
     newOrder.name = req.body.name;
     newOrder.ProductID  = req.body.ProductID;
@@ -55,7 +56,7 @@ router.post('/',(req,res)=>{
         })
     })
 });
-router.get('/:productID',(req,res)=>{
+router.get('/:productID',checkAuth,(req,res)=>{
         var id= req.params.productID;
         //console.log(id)
         Order.findById(id)
@@ -81,7 +82,7 @@ router.get('/:productID',(req,res)=>{
             });
     })
 
-router.delete('/:id',(req,res)=>{
+router.delete('/:id',checkAuth,(req,res)=>{
         var id= req.params.id;
         //console.log(id)
         Order.remove({_id: id})

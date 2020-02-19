@@ -15,7 +15,9 @@ db.on('error', err => {
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
+app.use('/users',require('./routes/user'));
 app.use('/products',require('./routes/product'));
 app.use('/orders',require('./routes/order'));
 
@@ -27,7 +29,7 @@ app.use((req,res,next)=>{
 });
 app.use((error,req,res,next)=>{
     res.status(404).json({
-        msg: 'wrong url',
+        msg: 'errro handling',
         error: {
             message: error.message
         }
