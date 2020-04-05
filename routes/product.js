@@ -24,9 +24,8 @@ router.post('/',upload.single("myPic"),checkAuth,(req,res)=>{
         name: req.body.name,
         price: req.body.price
     });
-//console.log(newProduct)
-// console.log("++++++++++++++ in chechAuth +++++++++++++++")
-// console.log(req.userData)
+console.log(req.file) // check file found or not
+
 newProduct.save()
         .then((data)=>{
         return res.status(200).json({

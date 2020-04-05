@@ -15,7 +15,6 @@ router.post('/signup',(req,res)=>{
 
     bcrypt.genSalt(10,(err,selt)=>{    // wrong genSelt
         bcrypt.hash( newUser.password ,selt,(err,hash)=>{
-
             if(err){
                 res.status(500).json({
                     Error: err,
@@ -62,7 +61,8 @@ router.post('/login',(req,res)=>{
                     })
                 }
                 else{
-                    var token = jwt.sign({
+                    var token = jwt.sign(
+                    {
                         username: user.email,
                         userId: user._id,
                         password: user.password  // you can add more info
